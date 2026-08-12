@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Google Sans", "Segoe UI", Roboto, system-ui, sans-serif;
+
+  /* Calendar surface palette — light greys and a single blue accent, the way
+     a clinical scheduling tool should read: quiet, high contrast, no noise. */
+  --color-surface: #ffffff;
+  --color-surface-muted: #f8f9fa;
+  --color-line: #dadce0;
+  --color-ink: #202124;
+  --color-ink-muted: #5f6368;
+  --color-ink-faint: #80868b;
+  --color-accent: #1a73e8;
+  --color-accent-hover: #1765cc;
+  --color-accent-soft: #e8f0fe;
+  --color-danger: #d93025;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}

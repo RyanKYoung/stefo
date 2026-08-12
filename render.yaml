@@ -1,0 +1,21 @@
+# Render blueprint for Stefo — hospital work calendar.
+#
+# Deploy: Render dashboard -> New -> Blueprint -> connect RyanKYoung/stefo.
+services:
+  - type: web
+    name: stefo
+    runtime: node
+    plan: free
+    branch: main
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start
+    healthCheckPath: /login
+    envVars:
+      - key: NODE_VERSION
+        value: 22.13.0
+      # Uncomment both when the Supabase project exists. `sync: false` makes
+      # Render prompt for the value instead of storing it in git.
+      # - key: NEXT_PUBLIC_SUPABASE_URL
+      #   sync: false # https://<project-ref>.supabase.co
+      # - key: NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+      #   sync: false # dashboard -> Project Settings -> API -> publishable key
