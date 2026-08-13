@@ -15,14 +15,24 @@ export async function proxy(request: NextRequest) {
   const user = getUserFromRequest(request);
   const { pathname } = request.nextUrl;
 
-  if (!user && !isPublic(pathname)) {
+  /*
+   * Server actions POST to the page's own URL, so a sign-in lands here as
+   * `POST /login` — carrying the session cookie the action just set. Steering
+   * that request would race the action's own redirect and emit `Location`
+   * twice, which folds into the literal path "/calendar, /calendar" and 404s.
+   * Only real navigations get steered; actions and their auth checks are left
+   * to the page components, which each verify the session themselves.
+   */
+  const isNavigation = request.method === "GET" || request.method === "HEAD";
+
+  if (isNavigation && !user && !isPublic(pathname)) {
     const redirect = request.nextUrl.clone();
     redirect.pathname = "/login";
     redirect.searchParams.set("next", pathname);
     return NextResponse.redirect(redirect);
   }
 
-  if (user && pathname === "/login") {
+  if (isNavigation && user && pathname === "/login") {
     const redirect = request.nextUrl.clone();
     redirect.pathname = "/calendar";
     redirect.search = "";
