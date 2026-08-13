@@ -6,6 +6,8 @@ import { DISCIPLINES, DISCIPLINE_LABELS, formatShiftTime, type Discipline, type 
 import type { ShiftView } from "@/lib/view-model";
 
 export function Sidebar({
+  open,
+  onClose,
   roster,
   currentStaff,
   openShifts,
@@ -16,6 +18,9 @@ export function Sidebar({
   totalHours,
   rangeLabel,
 }: {
+  /** Drawer state below `lg`; ignored once the sidebar is a static column. */
+  open: boolean;
+  onClose: () => void;
   roster: Staff[];
   currentStaff: Staff;
   openShifts: ShiftView[];
@@ -32,7 +37,33 @@ export function Sidebar({
       : openShifts.filter((view) => view.shift.discipline === disciplineFilter);
 
   return (
-    <aside className="flex w-60 shrink-0 flex-col border-r border-[var(--color-line)] bg-[var(--color-surface-muted)]">
+    <aside
+      aria-hidden={undefined}
+      className={[
+        // Below lg the roster is a slide-over: 240px of fixed column would be
+        // two thirds of a phone screen, leaving the calendar unreadable.
+        "fixed inset-y-0 left-0 z-40 flex w-[17rem] max-w-[85vw] flex-col border-r border-[var(--color-line)] bg-[var(--color-surface-muted)] shadow-xl transition-transform duration-200 ease-out",
+        open ? "translate-x-0" : "-translate-x-full",
+        // From lg it is the plain column it has always been.
+        "lg:static lg:z-auto lg:w-60 lg:max-w-none lg:shrink-0 lg:translate-x-0 lg:shadow-none lg:transition-none",
+      ].join(" ")}
+    >
+      <div className="flex shrink-0 items-center justify-between border-b border-[var(--color-line)] px-3 py-2 lg:hidden">
+        <span className="text-[11px] font-semibold tracking-[0.06em] text-[var(--color-ink-muted)]">
+          STAFF &amp; OPEN SHIFTS
+        </span>
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close staff panel"
+          className="-mr-1 flex h-11 w-11 items-center justify-center rounded-full text-[var(--color-ink-muted)]"
+        >
+          <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        </button>
+      </div>
+
       <div className="min-h-0 flex-1 overflow-y-auto">
         <section className="px-3 py-3">
           <h2 className="mb-2 px-1 text-[11px] font-semibold tracking-[0.06em] text-[var(--color-ink-muted)]">
@@ -92,7 +123,7 @@ export function Sidebar({
             onChange={(event) =>
               onDisciplineFilter(event.target.value as Discipline | "all")
             }
-            className="mb-2 w-full rounded-md border border-[var(--color-line-strong)] bg-[var(--color-surface)] px-2 py-1.5 text-[12px] text-[var(--color-ink)] outline-none focus:border-[var(--color-cardinal)]"
+            className="mb-2 w-full rounded-md border border-[var(--color-line-strong)] bg-[var(--color-surface)] px-2 py-2.5 text-[16px] text-[var(--color-ink)] lg:py-1.5 lg:text-[12px] outline-none focus:border-[var(--color-cardinal)]"
           >
             <option value="all">All specialties</option>
             {DISCIPLINES.map((discipline) => (

@@ -30,7 +30,19 @@ export function ShiftPanel({
   };
 
   return (
-    <aside className="flex w-72 shrink-0 flex-col border-l border-[var(--color-line)] bg-[var(--color-surface)]">
+    <aside
+      className={[
+        // Below lg this is a bottom sheet. As a 288px column it would leave a
+        // phone with no calendar at all once the roster is open too.
+        "fixed inset-x-0 bottom-0 z-50 flex max-h-[80dvh] flex-col rounded-t-2xl border-t border-[var(--color-line)] bg-[var(--color-surface)] shadow-2xl",
+        "lg:static lg:z-auto lg:max-h-none lg:w-72 lg:shrink-0 lg:rounded-none lg:border-t-0 lg:border-l lg:border-l-[var(--color-line)] lg:shadow-none",
+      ].join(" ")}
+    >
+      <div
+        aria-hidden="true"
+        className="mx-auto mt-2 h-1 w-9 shrink-0 rounded-full bg-[var(--color-line-strong)] lg:hidden"
+      />
+
       <div className="flex items-start justify-between gap-2 border-b border-[var(--color-line)] px-4 py-3">
         <div className="min-w-0">
           <p className="text-[11px] font-semibold tracking-[0.06em] text-[var(--color-ink-muted)]">
@@ -48,7 +60,7 @@ export function ShiftPanel({
           type="button"
           onClick={onClose}
           aria-label="Close shift details"
-          className="-mr-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[var(--color-ink-muted)] transition hover:bg-[var(--color-surface-muted)]"
+          className="-mr-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-full lg:h-7 lg:w-7 text-[var(--color-ink-muted)] transition hover:bg-[var(--color-surface-muted)]"
         >
           <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
             <path
@@ -112,7 +124,7 @@ export function ShiftPanel({
               type="button"
               disabled={pending}
               onClick={() => run(() => openShiftForTaking(shift.id))}
-              className="w-full rounded-md border border-[var(--color-cardinal)] px-4 py-2.5 text-[14px] font-semibold text-[var(--color-cardinal)] transition hover:bg-[var(--color-cardinal-soft)] disabled:opacity-60"
+              className="w-full rounded-md border border-[var(--color-cardinal)] px-4 py-3 lg:py-2.5 text-[14px] font-semibold text-[var(--color-cardinal)] transition hover:bg-[var(--color-cardinal-soft)] disabled:opacity-60"
             >
               {pending ? "Opening…" : "Open for taking"}
             </button>
@@ -121,7 +133,7 @@ export function ShiftPanel({
               type="button"
               disabled={pending}
               onClick={() => run(() => claimShift(shift.id))}
-              className="w-full rounded-md bg-[var(--color-cardinal)] px-4 py-2.5 text-[14px] font-semibold text-white transition hover:bg-[var(--color-cardinal-hover)] disabled:opacity-60"
+              className="w-full rounded-md bg-[var(--color-cardinal)] px-4 py-3 lg:py-2.5 text-[14px] font-semibold text-white transition hover:bg-[var(--color-cardinal-hover)] disabled:opacity-60"
             >
               {pending ? "Sending…" : "I want it"}
             </button>

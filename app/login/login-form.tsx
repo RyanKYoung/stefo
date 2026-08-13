@@ -7,7 +7,7 @@ import { signIn, type LoginState } from "./actions";
 const initialState: LoginState = { error: null };
 
 const fieldClass =
-  "rounded-md border border-[var(--color-line-strong)] bg-[var(--color-surface)] px-3 py-2.5 text-[15px] text-[var(--color-ink)] outline-none transition placeholder:text-[var(--color-ink-faint)] focus:border-[var(--color-cardinal)] focus:ring-2 focus:ring-[var(--color-cardinal-soft)]";
+  "rounded-md border border-[var(--color-line-strong)] bg-[var(--color-surface)] px-3 py-2.5 text-[16px] text-[var(--color-ink)] outline-none transition placeholder:text-[var(--color-ink-faint)] focus:border-[var(--color-cardinal)] focus:ring-2 focus:ring-[var(--color-cardinal-soft)]";
 
 const labelClass =
   "text-[12px] font-semibold tracking-wide uppercase text-[var(--color-ink-muted)]";

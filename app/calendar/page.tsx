@@ -93,7 +93,7 @@ export default async function CalendarPage({
         : dayLabel(focus);
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex h-[100dvh] flex-col">
       <div className="h-1 shrink-0 bg-[var(--color-cardinal)]" />
 
       <header className="flex shrink-0 items-center justify-between gap-4 border-b border-[var(--color-line)] px-4 py-2.5 sm:px-5">
