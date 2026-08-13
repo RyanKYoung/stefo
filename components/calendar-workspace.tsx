@@ -255,6 +255,7 @@ export function CalendarWorkspace({
               setSelectedDateKey((current) => (current === key ? null : key))
             }
             onSelectShift={handleSelectShift}
+            onOpenDay={(key) => go("day", key)}
           />
         ) : (
           <HourGrid
