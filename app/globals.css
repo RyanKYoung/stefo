@@ -1,20 +1,29 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Google Sans", "Segoe UI", Roboto, system-ui, sans-serif;
+  --font-sans: "Segoe UI", Roboto, system-ui, -apple-system, sans-serif;
 
-  /* Calendar surface palette — light greys and a single blue accent, the way
-     a clinical scheduling tool should read: quiet, high contrast, no noise. */
+  /* Palette in the USC family — cardinal carries every action, gold appears
+     only as a thin accent. Neutrals are warmed slightly so the cardinal sits
+     on them without going pink. */
   --color-surface: #ffffff;
-  --color-surface-muted: #f8f9fa;
-  --color-line: #dadce0;
-  --color-ink: #202124;
-  --color-ink-muted: #5f6368;
-  --color-ink-faint: #80868b;
-  --color-accent: #1a73e8;
-  --color-accent-hover: #1765cc;
-  --color-accent-soft: #e8f0fe;
-  --color-danger: #d93025;
+  --color-surface-muted: #f6f5f3;
+  --color-surface-sunken: #efedea;
+  --color-line: #e0ded9;
+  --color-line-strong: #c9c6bf;
+
+  --color-ink: #1c1b19;
+  --color-ink-muted: #5c5952;
+  /* Dark enough to clear WCAG AA (4.5:1) at 12–13px on both the white and the
+     muted surface — the earlier lighter grey failed on both. */
+  --color-ink-faint: #6b675f;
+
+  --color-cardinal: #990000;
+  --color-cardinal-hover: #7a0000;
+  --color-cardinal-soft: #fbf1f1;
+  --color-gold: #ffc72c;
+
+  --color-danger: #a02020;
 }
 
 html,
@@ -27,4 +36,11 @@ body {
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+}
+
+/* Cardinal is dark enough that the default focus ring disappears against it;
+   this keeps keyboard focus obvious on every control. */
+:focus-visible {
+  outline: 2px solid var(--color-cardinal);
+  outline-offset: 2px;
 }
