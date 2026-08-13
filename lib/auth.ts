@@ -12,19 +12,27 @@ import { cookies } from "next/headers";
 
 export const SESSION_COOKIE = "stefo_demo_user";
 
-export type StefoUser = { email: string };
+/** The one account with a fixed password in the stub. */
+export const ADMIN_EMAIL = "admin@admin.com";
+export const ADMIN_PASSWORD = "1234";
+
+export function isAdminEmail(email: string) {
+  return email.trim().toLowerCase() === ADMIN_EMAIL;
+}
+
+export type StefoUser = { email: string; isAdmin: boolean };
 
 /** Reads the stub session in server components, actions, and route handlers. */
 export async function getCurrentUser(): Promise<StefoUser | null> {
   const store = await cookies();
   const email = store.get(SESSION_COOKIE)?.value;
-  return email ? { email } : null;
+  return email ? { email, isAdmin: isAdminEmail(email) } : null;
 }
 
 /** Reads the stub session inside the proxy, which gets cookies off the request. */
 export function getUserFromRequest(request: NextRequest): StefoUser | null {
   const email = request.cookies.get(SESSION_COOKIE)?.value;
-  return email ? { email } : null;
+  return email ? { email, isAdmin: isAdminEmail(email) } : null;
 }
 
 export async function startSession(email: string) {

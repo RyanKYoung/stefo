@@ -3,7 +3,12 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
-import { endSession, startSession } from "@/lib/auth";
+import {
+  ADMIN_PASSWORD,
+  endSession,
+  isAdminEmail,
+  startSession,
+} from "@/lib/auth";
 
 export type LoginState = { error: string | null };
 
@@ -14,7 +19,9 @@ function safeNext(value: FormDataEntryValue | null) {
 }
 
 /**
- * STUB: accepts any email with any non-empty password. Swap the body for
+ * STUB: accepts any email with any non-empty password, except the admin
+ * account, which checks its fixed demo password so the admin page isn't
+ * reachable by simply typing the address. Swap the body for
  * `supabase.auth.signInWithPassword` once the Supabase project exists.
  */
 export async function signIn(
@@ -27,6 +34,10 @@ export async function signIn(
 
   if (!email || !password) {
     return { error: "Enter your email and password." };
+  }
+
+  if (isAdminEmail(email) && password !== ADMIN_PASSWORD) {
+    return { error: "That email and password don't match an account." };
   }
 
   await startSession(email);

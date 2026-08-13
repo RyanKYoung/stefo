@@ -35,6 +35,65 @@ export function addMonths(date: Date, delta: number) {
   return new Date(date.getFullYear(), date.getMonth() + delta, 1);
 }
 
+export function addDays(date: Date, delta: number) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate() + delta);
+}
+
+/** The Sunday that starts the week containing `date`. */
+export function startOfWeek(date: Date) {
+  return addDays(date, -((date.getDay() - WEEK_STARTS_ON + 7) % 7));
+}
+
+/** The seven days of the week containing `date`. */
+export function weekDays(date: Date) {
+  const start = startOfWeek(date);
+  return Array.from({ length: 7 }, (_, index) => addDays(start, index));
+}
+
+/** Inclusive list of yyyy-mm-dd keys between two dates. */
+export function eachDateKey(start: Date, end: Date) {
+  const keys: string[] = [];
+  for (
+    let cursor = startOfDay(start);
+    cursor <= end;
+    cursor = addDays(cursor, 1)
+  ) {
+    keys.push(toDateKey(cursor));
+  }
+  return keys;
+}
+
+export function dayLabel(date: Date) {
+  return date.toLocaleDateString(undefined, {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+/**
+ * "Aug 9 – 15, 2026", widening to months or years only when the week spans
+ * them. Built by hand rather than by dropping fields from
+ * `toLocaleDateString` options — omitting the month there makes some locales
+ * emit a bare day fallback like "2026 (day: 15)".
+ */
+export function weekLabel(date: Date) {
+  const days = weekDays(date);
+  const first = days[0];
+  const last = days[6];
+  const month = (value: Date) =>
+    value.toLocaleDateString(undefined, { month: "short" });
+
+  if (first.getFullYear() !== last.getFullYear()) {
+    return `${month(first)} ${first.getDate()}, ${first.getFullYear()} – ${month(last)} ${last.getDate()}, ${last.getFullYear()}`;
+  }
+  if (first.getMonth() !== last.getMonth()) {
+    return `${month(first)} ${first.getDate()} – ${month(last)} ${last.getDate()}, ${last.getFullYear()}`;
+  }
+  return `${month(first)} ${first.getDate()} – ${last.getDate()}, ${last.getFullYear()}`;
+}
+
 export function monthLabel(date: Date) {
   return date.toLocaleDateString(undefined, {
     month: "long",
