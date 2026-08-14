@@ -25,12 +25,12 @@ export function CsvUpload() {
           name="file"
           accept=".csv,text/csv"
           required
-          className="flex-1 rounded-md border border-[var(--color-line-strong)] bg-[var(--color-surface)] px-3 py-2 text-[13px] text-[var(--color-ink)] file:mr-3 file:rounded file:border-0 file:bg-[var(--color-surface-muted)] file:px-3 file:py-1.5 file:text-[12.5px] file:font-medium file:text-[var(--color-ink)]"
+          className="w-full min-w-0 flex-1 rounded-md border border-[var(--color-line-strong)] bg-[var(--color-surface)] px-3 py-2 text-[16px] text-[var(--color-ink)] sm:w-auto sm:text-[13px] file:mr-3 file:rounded file:border-0 file:bg-[var(--color-surface-muted)] file:px-3 file:py-1.5 file:text-[12.5px] file:font-medium file:text-[var(--color-ink)]"
         />
         <button
           type="submit"
           disabled={pending}
-          className="rounded-md bg-[var(--color-cardinal)] px-4 py-2 text-[13.5px] font-semibold text-white transition hover:bg-[var(--color-cardinal-hover)] disabled:opacity-60"
+          className="w-full rounded-md bg-[var(--color-cardinal)] px-4 py-3 text-[13.5px] font-semibold text-white transition hover:bg-[var(--color-cardinal-hover)] disabled:opacity-60 sm:w-auto sm:py-2"
         >
           {pending ? "Importing…" : "Upload schedule"}
         </button>

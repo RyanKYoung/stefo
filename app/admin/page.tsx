@@ -62,7 +62,7 @@ export default async function AdminPage() {
   const uploaded = uploadedRange();
 
   return (
-    <div className="flex min-h-screen flex-col bg-[var(--color-surface-muted)]">
+    <div className="flex min-h-[100dvh] flex-col bg-[var(--color-surface-muted)]">
       <div className="h-1 shrink-0 bg-[var(--color-cardinal)]" />
 
       <header className="flex shrink-0 items-center justify-between gap-4 border-b border-[var(--color-line)] bg-[var(--color-surface)] px-4 py-2.5 sm:px-6">
@@ -81,7 +81,7 @@ export default async function AdminPage() {
         <div className="flex shrink-0 items-center gap-3">
           <Link
             href="/calendar"
-            className="rounded-md border border-[var(--color-line-strong)] px-3 py-1.5 text-[13px] font-medium text-[var(--color-ink)] transition hover:border-[var(--color-cardinal)] hover:text-[var(--color-cardinal)]"
+            className="min-h-11 rounded-md border border-[var(--color-line-strong)] px-2.5 py-2.5 text-[13px] font-medium text-[var(--color-ink)] transition hover:border-[var(--color-cardinal)] hover:text-[var(--color-cardinal)] sm:min-h-0 sm:px-3 sm:py-1.5"
           >
             Calendar
           </Link>
@@ -91,7 +91,7 @@ export default async function AdminPage() {
           <form action={signOut}>
             <button
               type="submit"
-              className="rounded-md border border-[var(--color-line-strong)] px-3 py-1.5 text-[13px] font-medium text-[var(--color-ink)] transition hover:border-[var(--color-cardinal)] hover:text-[var(--color-cardinal)]"
+              className="min-h-11 rounded-md border border-[var(--color-line-strong)] px-2.5 py-2.5 text-[13px] font-medium text-[var(--color-ink)] transition hover:border-[var(--color-cardinal)] hover:text-[var(--color-cardinal)] sm:min-h-0 sm:px-3 sm:py-1.5"
             >
               Sign out
             </button>

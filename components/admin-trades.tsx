@@ -92,9 +92,15 @@ export function AdminTrades({ trades }: { trades: TradeRow[] }) {
             </div>
 
             {trade.status === "pending" ? (
-              <div className="flex shrink-0 items-center gap-2">
+              /*
+               * Approving a trade moves someone's shift, so it should not be a
+               * 31px target sitting next to Deny. On a phone the pair takes its
+               * own full-width row and splits it; from sm they sit inline on
+               * the card as before.
+               */
+              <div className="flex w-full shrink-0 flex-wrap items-center gap-2 sm:w-auto">
                 {trade.missing ? (
-                  <span className="text-[12px] text-[var(--color-danger)]">
+                  <span className="w-full text-[12px] text-[var(--color-danger)] sm:w-auto">
                     Shift no longer exists
                   </span>
                 ) : null}
@@ -102,7 +108,7 @@ export function AdminTrades({ trades }: { trades: TradeRow[] }) {
                   type="button"
                   disabled={pending}
                   onClick={() => decide(trade.id, false)}
-                  className="rounded-md border border-[var(--color-line-strong)] px-3 py-1.5 text-[12.5px] font-medium text-[var(--color-ink)] transition hover:border-[var(--color-danger)] hover:text-[var(--color-danger)] disabled:opacity-60"
+                  className="min-h-11 flex-1 rounded-md border border-[var(--color-line-strong)] px-3 py-2.5 text-[12.5px] font-medium text-[var(--color-ink)] transition hover:border-[var(--color-danger)] hover:text-[var(--color-danger)] disabled:opacity-60 sm:min-h-0 sm:flex-none sm:py-1.5"
                 >
                   Deny
                 </button>
@@ -110,7 +116,7 @@ export function AdminTrades({ trades }: { trades: TradeRow[] }) {
                   type="button"
                   disabled={pending || trade.missing}
                   onClick={() => decide(trade.id, true)}
-                  className="rounded-md bg-[var(--color-cardinal)] px-3 py-1.5 text-[12.5px] font-semibold text-white transition hover:bg-[var(--color-cardinal-hover)] disabled:opacity-60"
+                  className="min-h-11 flex-1 rounded-md bg-[var(--color-cardinal)] px-3 py-2.5 text-[12.5px] font-semibold text-white transition hover:bg-[var(--color-cardinal-hover)] disabled:opacity-60 sm:min-h-0 sm:flex-none sm:py-1.5"
                 >
                   Approve
                 </button>
