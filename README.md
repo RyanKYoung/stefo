@@ -9,24 +9,33 @@ sidebar with colour-coded people and filterable open shifts; shift claiming and
 releasing with administrator approval; and an admin page for approving trades
 and importing a schedule CSV.
 
+It is built for a desktop browser and an iPhone equally — the two ways it
+actually gets used. What changes between them is described under
+[Responsive layout](#responsive-layout).
+
 ## Using it
 
 **Staff.** Any email and password signs you in (see the auth warning below).
 Unknown emails borrow the first DPT identity so there are always shifts of your
 own to work with.
 
-- **Views** — Day, Week, Month in the top right. Week and day are 24-hour grids
-  that open scrolled to 6 AM.
+- **Views** — Day, Week, Month, top right on a desktop and on their own row
+  under the title on a phone. Week and day are 24-hour grids that open scrolled
+  to 6 AM.
 - **Selecting** — click a day (or a day header) to highlight it; click an hour
   in the week or day grid to highlight that hour. Each column reserves a narrow
   strip on its left edge that always takes a click, so a fully staffed day
-  doesn't make its hours unreachable.
-- **Shifts** — click any shift to open the detail panel. **I want it** raises a
+  doesn't make its hours unreachable — 12px for a cursor, 28px for a fingertip.
+  On a phone, tapping a month cell's dots opens that day rather than
+  highlighting it.
+- **Shifts** — click or tap any shift to open its detail: a panel beside the
+  calendar on a desktop, a bottom sheet on a phone. **I want it** raises a
   claim on an open shift or someone else's; **Open for taking** releases one of
   your own back to the pool. Claims need administrator approval, so nothing
   moves on the schedule until it's approved.
-- **Your hours** sit quietly at the bottom of the sidebar, counted over the
-  period named in the toolbar.
+- **Your hours** sit quietly at the bottom of the staff sidebar, counted over
+  the period named in the toolbar. On a phone that sidebar is a drawer behind
+  the button at the top left.
 
 **Administrator.** Sign in as `admin@admin.com` with password `1234` — the one
 account in the stub whose password is actually checked. Everyone else is
@@ -65,6 +74,49 @@ Body text was checked against WCAG AA: the small-print greys were failing at
 3.3–3.6:1 and `--color-ink-faint` was darkened to `#6b675f`, which brings every
 text pair to 4.8:1 or better, including out-of-month day numbers on the sunken
 cell background.
+
+### Responsive layout
+
+The calendar switches at `lg` (1024px) and the admin page at `sm` (640px). The
+mismatch is deliberate: the calendar carries two fixed panels — a 240px roster
+and a 288px shift detail — that need 528px of width before they will sit beside
+a grid at all, while the admin page is a `max-w-4xl` document with no panels
+that reflows happily well below 1024px. Holding it in phone layout until 1024
+would only make a tablet look broken.
+
+Below `lg` the roster becomes a slide-over behind a toolbar button and the
+shift detail becomes a bottom sheet, both dismissed by a scrim. From `lg` they
+are the same static columns as ever, and nothing about the desktop layout
+changes.
+
+Each view earns its keep at phone width rather than simply shrinking:
+
+- **Month** shows one dot per shift — filled in the person's colour, hollow for
+  an open shift, ringed for your own, and your own sorted first — collapsing
+  past six into a `+N`. A 53px column truncates a named chip down to its start
+  time and nothing else, so the names live in the day view, which the cell taps
+  through to. Chips are untouched from `lg`.
+- **Week and day** give their columns a width floor and scroll sideways rather
+  than shrink past it: 116px per lane in a day, 108px per day in a week. A
+  quiet day still fills the screen; only a genuinely busy one scrolls.
+
+`hour-grid.tsx` runs a single scroller for both axes so the header can stick to
+the top and the time gutter to the left. Two separate scrollers do not work,
+and the failure is quiet: a child with `overflow-y: auto` has its `overflow-x`
+computed to `auto` as well, which makes *it* the nearest horizontal scrolling
+ancestor and leaves a `sticky left-0` gutter anchored to a box that never
+scrolls — so the hour labels slide away with the content.
+
+Touch details that are easy to regress:
+
+- Every control clears 44pt below the breakpoint. Where padding alone could not
+  reach it — the font size and border feed into the total — the floor is an
+  explicit `min-h-11`.
+- Form controls are 16px below the breakpoint. iOS zooms the page on any
+  focused control under that, which fired on the login fields before anyone had
+  touched anything else.
+- The app is sized with `100dvh`, not `100vh`. On iOS Safari `100vh` excludes
+  the dynamic toolbar and the bottom of the calendar sits underneath it.
 
 ## Running locally
 
@@ -126,10 +178,10 @@ to be issued by a scheduling administrator.
 | `app/calendar/` | Signed-in calendar; loads the window each view needs |
 | `app/admin/` | Trade approval and CSV import, administrators only |
 | `components/calendar-workspace.tsx` | View + selection state, toolbar, layout |
-| `components/hour-grid.tsx` | The 24-hour grid behind week and day views |
-| `components/month-view.tsx` | Month grid with shift chips |
-| `components/sidebar.tsx` | Staff roster, open shifts, hours total |
-| `components/shift-panel.tsx` | Shift detail and claim/release actions |
+| `components/hour-grid.tsx` | The 24-hour grid behind week and day views; one dual-axis scroller |
+| `components/month-view.tsx` | Month grid — named chips from `lg`, density dots below |
+| `components/sidebar.tsx` | Staff roster, open shifts, hours total; a drawer below `lg` |
+| `components/shift-panel.tsx` | Shift detail and claim/release actions; a bottom sheet below `lg` |
 | `lib/calendar.ts` | Pure date maths — grid building, stepping, labels |
 | `lib/seed.ts` | Deterministic demo schedule |
 | `lib/store.ts` | In-memory shifts, trades, uploads (server-only) |
@@ -157,3 +209,8 @@ The view month is derived rather than stored — `monthOverride === null` means
 `render.yaml` is a Render blueprint: **New → Blueprint → connect
 `RyanKYoung/stefo`**. It builds with `npm ci && npm run build` and serves with
 `npm run start` on the free plan, health-checking `/login`.
+
+`app/layout.tsx` bakes Render's `RENDER_GIT_COMMIT` into a `stefo-build` meta
+tag, so which commit a deploy is actually running can be read straight off
+`/login` instead of hunting for a feature that looks changed. It reads `dev`
+when built locally.
