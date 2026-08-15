@@ -4,6 +4,10 @@ DPT clinical rotation schedule for **USC Verdugo Hills Hospital** (Physical
 Medicine & Rehabilitation, 1812 Verdugo Blvd, Glendale). Next.js 16 (App
 Router) + React 19 + Tailwind 4, deployed on Render.
 
+**Live: <https://stefo-u7lc.onrender.com>** — the first request after an idle
+spell takes about 20 seconds while Render's free plan wakes the service back
+up. That is a cold start, not a hang.
+
 Sign in and land on the current month. Month, week, and day views; a staff
 sidebar with colour-coded people and filterable open shifts; shift claiming and
 releasing with administrator approval; and an admin page for approving trades
@@ -213,4 +217,16 @@ The view month is derived rather than stored — `monthOverride === null` means
 `app/layout.tsx` bakes Render's `RENDER_GIT_COMMIT` into a `stefo-build` meta
 tag, so which commit a deploy is actually running can be read straight off
 `/login` instead of hunting for a feature that looks changed. It reads `dev`
-when built locally.
+when built locally:
+
+```bash
+curl -s https://stefo-u7lc.onrender.com/login | grep -o 'name="stefo-build" content="[^"]*"'
+```
+
+A bare `grep stefo-build` is no use here — Next.js serves the document on a
+single line, so it matches the whole page.
+
+One drift worth knowing about: the blueprint declares `name: stefo`, while the
+deployment answers on `stefo-u7lc.onrender.com`. Confirm the two refer to the
+same service before redeploying from the blueprint, since a mismatch would
+create a second service rather than update the running one.
